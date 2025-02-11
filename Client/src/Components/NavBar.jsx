@@ -7,17 +7,17 @@ function Navbar(){
      <div>
          <div>
             <span>ShareIt</span>
-            {/* <NavLink to="/">Home</NavLink>
+            <NavLink to="/">Home</NavLink>
             <NavLink to="/profile">Profile</NavLink>
-            <NavLink to="/files">Files</NavLink> */}
+            <NavLink to="/files">Files</NavLink>
          </div>
          <div>
-            {/* if(auth){
+            if(auth){
                 <NavLink to="/Signup">SignUp</NavLink>
             }
             else{
                 <NavLink to="/Logout">LogOut</NavLink>
-            } */}
+            }
          </div>
          <div></div>
      </div>
