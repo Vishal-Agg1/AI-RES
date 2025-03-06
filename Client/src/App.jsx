@@ -1,15 +1,20 @@
-import { useState } from 'react'
-import Navbar from "./Components/NavBar";
 import React from 'react';
 import './index.css'
-import { DropzoneButton } from './Components/Dropzone/DropzoneButton';
+import { Outlet } from 'react-router-dom';
+import NavbarMinimal from './Components/NavBar.jsx'
 function App() {
   
   return (
-    
+   
     <>
-      <Navbar />
-      </>
+    <div className='app-container'>
+      <div className='navbar'> <NavbarMinimal /></div>
+      <div className='content'> 
+        <Outlet /></div>
+    </div>
+      
+     
+    </>
   )
 }
 
