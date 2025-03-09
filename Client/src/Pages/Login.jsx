@@ -6,66 +6,41 @@ import "./signup.css"; // Importing external CSS
 import { NavLink, useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { login } from "../AuthState/AuthSlice"; 
-export default function Signup({toggleForm}) {
+export default function Login({toggleForm}) {
 const Navigate = useNavigate();
 const dispatch = useDispatch();
   const [data, setData] = useState({
-    name: "",
     email: "",
     password: "",
   });
-
-  const handleChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
+const handleChange=(e)=>{
+    setData({...data,[e.target.name]:e.target.value});
+}
+const handleSubmit=(e)=>{
     e.preventDefault();
-    axios.post("http://localhost:8000/v1/signup",{
-        name:data.name,
+    axios.post("http://localhost:8000/v1/login",{
         email:data.email,
         password:data.password,
     })
     .then(response=>{
         if(response.data.success==true){
-          axios.post("http://localhost:8000/v1/login",{
-            email:data.email,
-            password:data.password,
-          })
-          .then(response=>{
             dispatch(login({user:response.data.data._id}));
             Navigate('/');
-          })
-          .catch(error=>{
-            alert("Account Created Pls Login");
-          })
         }
         else{
-            alert("Signup Failed Try Again");
+            alert(response.data.message);
         }
     })
     .catch(error=>{
-        alert("Signup Failed Try Again");
+        alert("Failed to Login");
     })
-  };
-
+}
   return (
     <div className="signup-container">
       <div className="signup-box">
-        <h2 className="signup-title">Sign Up</h2>
+        <h2 className="signup-title">Log In</h2>
 
         <form onSubmit={handleSubmit} className="signup-form">
-          <div className="form-group">
-            <label className="form-label">Name</label>
-            <AutocompleteLoading
-              name="name"
-              placeholder="Enter Your Name"
-              value={data.name}
-              onChange={handleChange}
-              className="form-input"
-            />
-          </div>
-
           <div className="form-group">
             <label className="form-label">Email</label>
             <AutocompleteLoading
@@ -85,10 +60,10 @@ const dispatch = useDispatch();
             />
           </div>
           <button type="submit" className="submit-button">
-            Sign Up
+            LogIn
           </button>
         </form>
-        <p>if Already have Account? <button style={{ all: "unset", cursor: "pointer" }} onClick={toggleForm}>Log IN</button></p>
+        <p>Create New Account: <button onClick={toggleForm} style={{ all: "unset", cursor: "pointer" }}>Sign Up</button></p>
       </div>
     </div>
   );

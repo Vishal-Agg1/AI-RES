@@ -12,11 +12,15 @@ import {
   IconArrowAutofitUp,
   IconArchive
 } from '@tabler/icons-react';
+
+import { Button } from '@mantine/core';
 import { Center, Stack, Tooltip, UnstyledButton } from '@mantine/core';
 import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './Navbar.module.css';
 import { NavLink } from 'react-router-dom';
-
+import { useDispatch, useSelector } from 'react-redux';
+import Signup from '../Pages/Signup';
+import {logout} from '../AuthState/AuthSlice'
 function NavbarLink({ icon: Icon, label, active, onClick, path }) {
   return (
     <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
@@ -42,6 +46,10 @@ const mockdata = [
 
 export default function NavbarMinimal() {
   const [active, setActive] = useState(2);
+  const Auth = useSelector((state) => {
+    console.log("Auth state:", state.auth.isAuth);
+    return state.auth.isAuth; 
+  });
 
   const links = mockdata.map((link, index) => (
     <NavbarLink
@@ -53,7 +61,10 @@ export default function NavbarMinimal() {
       path={link.path}
     />
   ));
-
+  const dispatch = useDispatch();
+  const handlelogout = ()=>{
+     dispatch(logout());
+  }
   return (
     <nav className={classes.navbar}>
       <Center>
@@ -67,8 +78,24 @@ export default function NavbarMinimal() {
       </div>
 
       <Stack justify="center" gap={0}>
-        <NavbarLink icon={IconSwitchHorizontal} label="Change account" />
-        <NavbarLink icon={IconLogout} label="Logout" />
+        {Auth&&<NavbarLink icon={IconSwitchHorizontal} label="Change account" />}
+        {Auth&&<NavbarLink icon={IconLogout} label="Logout" onClick={handlelogout}/>}
+        {!Auth&&<NavLink to="/signup"> <Button
+  variant="gradient"
+  gradient={{ from: 'cyan', to: 'pink', deg: 139 }}
+  style={{
+    width: "100%",       // Ensures it fits inside the navbar
+    maxWidth: "80px",    // Limits it to 80px width
+    padding: "5px 10px", // Adjust padding for a better look
+    fontSize: "12px",    // Make text fit properly
+    textAlign: "center",
+    whiteSpace: "nowrap", // Prevents text from wrapping
+    overflow: "hidden",
+  }}
+>
+  Sign Up
+</Button>
+</NavLink>}
       </Stack>
     </nav>
   );

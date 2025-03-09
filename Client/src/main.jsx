@@ -15,6 +15,7 @@ import Signup from "./Pages/Signup.jsx";
 import Recieved from './Pages/Recfiles.jsx';
 import Setting from './Pages/Setting.jsx';
 import Upload from './Pages/Upload.jsx';
+import Login from './Pages/Login.jsx';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -60,18 +61,22 @@ const router = createBrowserRouter([
           <Upload />
           )
         },
+        {
+          path:"/login",
+          element:(
+            <Login />
+          )
+        }
     ],
 },
 ])
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
     <Provider store={Store}>
-      <PersistGate loading={null} persistor={Persiststore}>
+      <PersistGate loading={<h1>please wait</h1>} persistor={Persiststore}>
         <MantineProvider>
         <RouterProvider router={router}/>
         </MantineProvider>
       </PersistGate>
-    </Provider>
-  </StrictMode>,
+    </Provider>,
 )
