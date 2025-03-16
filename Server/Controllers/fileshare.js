@@ -23,7 +23,7 @@ exports.fileshare = async(req,res)=>{
             host: process.env.MAIL_HOST,
             // true for port 465, false for other ports
             port: 465, // or the appropriate port
-    secure: true, // true for port 465, false for other ports
+            secure: true, // true for port 465, false for other ports
             auth: {
               user: process.env.MAIL_USER,
               pass: process.env.MAIL_PASS,

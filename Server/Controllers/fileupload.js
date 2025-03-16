@@ -5,20 +5,14 @@ const mongoose = require('mongoose');
 exports.fileupload = async (req,res)=>{
     try {
         const data = req.files.file;
-        const email = req.body.email;
-        if(!email){
-            res.json({
-                success:false,
-                message:"give vailed user mail"
-            })
-        }
+        const email = req.body.id;
         if(!data){
             res.json({
                 success:false,
                 message:"Pleasse Provide File to upload"
             })
         }
-        const person = await User.findOne({email:email});
+        const person = await User.findById(email);
         if(!person){
             res.json({
                 success:false,

@@ -1,22 +1,53 @@
-import { useRef } from 'react';
+import { useRef,useState} from 'react';
 import { IconCloudUpload, IconDownload, IconX } from '@tabler/icons-react';
 import { Button, Group, Text, useMantineTheme } from '@mantine/core';
 import { Dropzone, MIME_TYPES } from '@mantine/dropzone';
 import classes from './DropzoneButton.module.css';
-
+import { useSelector } from 'react-redux';
+import axios from "axios"
 export function DropzoneButton() {
   const theme = useMantineTheme();
   const openRef = useRef(null);
+  //loading control
+  const [loading, setLoading] = useState(false); 
+  //status fo uplaod
+  const [status,setstatus] = useState(false);
+  const id = useSelector((state)=>{
+    return state.auth.user;
+  })
+  const handleFileUpload = async (files) => {
+    setLoading(true); // Start loading
+    console.log("Uploading file...", files[0]);
+    const file = files[0];
+    const formdata = new FormData();
+    formdata.append("file",file);
+    formdata.append("id",id);
+    try {
+      const response = await axios.post("http://localhost:8000/v1/upload",formdata, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      });
 
+      if(response.data.success==true) alert("File Uploaded successfully")
+      else{alert("Please Upload again")}
+    } catch (error) {
+      alert("error uploading file")
+      console.log(error);
+    }finally{setLoading(false);}
+  
+  };
   return (
     <div className={classes.wrapper}>
-      <Dropzone
+      <Dropzone 
         openRef={openRef}
-        onDrop={() => {}}
+        onDrop={handleFileUpload}
         className={classes.dropzone}
         radius="md"
         accept={[MIME_TYPES.pdf]}
         maxSize={30 * 1024 ** 2}
+        loading={loading}
       >
         <div style={{ pointerEvents: 'none' }}>
           <Group justify="center">
@@ -46,6 +77,7 @@ export function DropzoneButton() {
       <Button className={classes.control} size="md" radius="xl" onClick={() => openRef.current?.()}>
         Select files
       </Button>
+            
     </div>
   );
 }
