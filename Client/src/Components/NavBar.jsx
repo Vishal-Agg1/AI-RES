@@ -45,7 +45,7 @@ const mockdata = [
 ];
 
 export default function NavbarMinimal() {
-  const [active, setActive] = useState(2);
+  const [active, setActive] = useState(0);
   const Auth = useSelector((state) => {
     console.log("Auth state:", state.auth.isAuth);
     return state.auth.isAuth; 

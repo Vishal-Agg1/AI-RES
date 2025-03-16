@@ -7,7 +7,7 @@ import hardSet from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 const persistConfig = {
     key: "auth",
     storage,
-    stateReconciler: hardSet, // ✅ Ensures Redux merges state properly
+    stateReconciler: hardSet,
 };
 
 const persistAuthReducer = persistReducer(persistConfig,authReducer);
@@ -16,7 +16,7 @@ export const Store = configureStore({
     reducer:{auth:persistAuthReducer},
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
-          serializableCheck: false, // ✅ Fixes Redux Persist serialization warning
+          serializableCheck: false, 
         }),
 });
 
