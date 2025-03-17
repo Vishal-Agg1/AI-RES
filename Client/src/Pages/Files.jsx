@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import FileCard from "../Components/card";
+import FileCard from "../Components/card"; 
 
 export default function Files() {
   const [files, setFiles] = useState([]); // Initialize with an empty array
