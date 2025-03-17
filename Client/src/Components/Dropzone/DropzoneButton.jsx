@@ -45,7 +45,6 @@ export function DropzoneButton() {
         onDrop={handleFileUpload}
         className={classes.dropzone}
         radius="md"
-        accept={[MIME_TYPES.pdf]}
         maxSize={30 * 1024 ** 2}
         loading={loading}
       >

@@ -3,68 +3,115 @@ import React, { useState } from "react";
 
 const FileCard = ({ fileName, fileType, downloadLink }) => {
   const [showShareForm, setShowShareForm] = useState(false);
-  const [reciever,setreciever] = useState("");
+  const [reciever, setreciever] = useState("");
   const handleShare = () => {
     setShowShareForm(true);
   };
 
-  const handleClose = () => {  // Remove ({ fileType }) - it’s unnecessary
+  const handleClose = () => {
     axios.post("http://localhost:8000/v1/share", { reciever: reciever, file_id: fileType })
       .then((response) => {
-        if (response.data.success) {  // Use response.data.success directly
+        if (response.data.success) {
           alert("Shared successfully");
         } else {
           alert("Share failed");
         }
       })
       .catch((error) => {
-        console.error("Error sharing file:", error);  // Log the actual error for debugging
+        console.error("Error sharing file:", error);
         alert("Share failed");
       });
-  
     setShowShareForm(false);
   };
-  
 
   return (
     <div style={{
-      border: "1px solid #ddd",
+      backgroundColor: "#fff",
+      borderRadius: "12px",
+      width: "280px",
       padding: "16px",
-      borderRadius: "8px",
-      width: "250px",
-      boxShadow: "2px 2px 10px rgba(0, 0, 0, 0.1)",
-      textAlign: "center",
+      boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
+      transition: "transform 0.2s, box-shadow 0.2s",
+      cursor: "pointer",
+      border: "1px solid #e0e0e0",
+      position: "relative",
+      "&:hover": {
+        transform: "translateY(-4px)",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.12)"
+      }
     }}>
-      <h3>{fileName}</h3>
-      
-      <button
-        onClick={() => window.location.href = downloadLink}
-        style={{
-          backgroundColor: "#4CAF50",
-          color: "white",
-          padding: "8px 16px",
-          margin: "8px",
-          border: "none",
-          cursor: "pointer",
-          borderRadius: "4px",
-        }}
-      >
-        Download
-      </button>
-      <button
-        onClick={handleShare}
-        style={{
-          backgroundColor: "#008CBA",
-          color: "white",
-          padding: "8px 16px",
-          margin: "8px",
-          border: "none",
-          cursor: "pointer",
-          borderRadius: "4px",
-        }}
-      >
-        Share
-      </button>
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        marginBottom: "12px"
+      }}>
+        <div style={{
+          width: "40px",
+          height: "40px",
+          backgroundColor: "#E8F0FE",
+          borderRadius: "8px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          marginRight: "12px"
+        }}>
+          <span style={{ fontSize: "20px" }}>📄</span>
+        </div>
+        <h3 style={{
+          margin: 0,
+          fontSize: "16px",
+          fontWeight: "500",
+          color: "#1a73e8",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap"
+        }}>{fileName}</h3>
+      </div>
+
+      <div style={{
+        display: "flex",
+        gap: "8px",
+        justifyContent: "flex-end"
+      }}>
+        <button
+          onClick={() => window.location.href = downloadLink}
+          style={{
+            backgroundColor: "#F8F9FA",
+            color: "#1a73e8",
+            padding: "8px 16px",
+            border: "1px solid #1a73e8",
+            borderRadius: "20px",
+            cursor: "pointer",
+            fontSize: "14px",
+            fontWeight: "500",
+            transition: "all 0.2s",
+            "&:hover": {
+              backgroundColor: "#E8F0FE"
+            }
+          }}
+        >
+          Download
+        </button>
+        <button
+          onClick={handleShare}
+          style={{
+            backgroundColor: "#1a73e8",
+            color: "white",
+            padding: "8px 16px",
+            border: "none",
+            borderRadius: "20px",
+            cursor: "pointer",
+            fontSize: "14px",
+            fontWeight: "500",
+            transition: "all 0.2s",
+            "&:hover": {
+              backgroundColor: "#1557b0"
+            }
+          }}
+        >
+          Share
+        </button>
+      </div>
 
       {showShareForm && (
         <div style={{
@@ -73,19 +120,85 @@ const FileCard = ({ fileName, fileType, downloadLink }) => {
           left: "50%",
           transform: "translate(-50%, -50%)",
           backgroundColor: "white",
-          padding: "20px",
-          borderRadius: "8px",
-          boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+          padding: "24px",
+          borderRadius: "12px",
+          boxShadow: "0 4px 24px rgba(0, 0, 0, 0.12)",
           zIndex: 1000,
+          width: "400px"
         }}>
-          <h3>Share File</h3>
-          <p>File Name: {fileName}</p>
-          <input type="text" placeholder="Enter email to share" style={{ padding: "8px", width: "100%", marginBottom: "8px" }} onChange={(e)=>{
-            setreciever(e.target.value);
-          }}/>
-          <div style={{display:"flex",gap:"10px",flxDirection:"row"}}>
-          <button onClick={handleClose} style={{ padding: "8px", backgroundColor: "Green", color: "white", border: "none", cursor: "pointer", borderRadius: "4px" }}>Send</button>
-          <button onClick={()=>{setShowShareForm(false)}} style={{ padding: "8px", backgroundColor: "red", color: "white", border: "none", cursor: "pointer", borderRadius: "4px" }}>Close</button>
+          <h3 style={{
+            margin: "0 0 8px 0",
+            color: "#1a73e8",
+            fontSize: "20px"
+          }}>Share File</h3>
+          <p style={{
+            margin: "0 0 16px 0",
+            color: "#5f6368",
+            fontSize: "14px"
+          }}>File Name: {fileName}</p>
+          <input 
+            type="text" 
+            placeholder="Enter email to share" 
+            style={{ 
+              padding: "12px",
+              width: "100%",
+              border: "1px solid #e0e0e0",
+              borderRadius: "8px",
+              fontSize: "14px",
+              marginBottom: "16px",
+              "&:focus": {
+                outline: "none",
+                borderColor: "#1a73e8"
+              }
+            }} 
+            onChange={(e) => {
+              setreciever(e.target.value);
+            }}
+          />
+          <div style={{ 
+            display: "flex", 
+            gap: "12px", 
+            justifyContent: "flex-end",
+            
+          }}>
+            <button 
+              onClick={() => { setShowShareForm(false); }}
+              style={{ 
+                padding: "10px 20px",
+                backgroundColor: "#F8F9FA",
+                color: "#5f6368",
+                border: "none",
+                borderRadius: "20px",
+                cursor: "pointer",
+                fontSize: "14px",
+                fontWeight: "500",
+                transition: "all 0.2s",
+                "&:hover": {
+                  backgroundColor: "#E8F0FE"
+                }
+              }}
+            >
+              Cancel
+            </button>
+            <button 
+              onClick={handleClose}
+              style={{ 
+                padding: "10px 20px",
+                backgroundColor: "#1a73e8",
+                color: "white", 
+                border: "none",
+                borderRadius: "20px",
+                cursor: "pointer",
+                fontSize: "14px",
+                fontWeight: "500",
+                transition: "all 0.2s",
+                "&:hover": {
+                  backgroundColor: "#1557b0"
+                }
+              }}
+            >
+              Share
+            </button>
           </div>
         </div>
       )}
