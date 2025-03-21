@@ -1,2 +1,2 @@
-# ShareIt
-A Secure File Sharing Platform designed for seamless and encrypted file transfers, ensuring fast and hassle-free sharing between users.
+# AI-RES
+A Secure AI  Based Resume Sharing and Analysing Platform based on latest industrial trends for both Job-Seekers and Employeers. Also heelp you resume making a hassle free process.
