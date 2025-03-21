@@ -6,14 +6,14 @@ app.use(express.json());
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 const fileupload = require('express-fileupload');
 app.use(fileupload({
-    useTempFiles:true,
-    tempFileDir:'/tmp/'
+    useTempFiles: true,
+    tempFileDir: '/tmp/'
 }));
-const port = process.env.PORT || 5000;
+const port = 8000;
 app.listen(port,()=>{
     console.log(`server is running at port: ${port}`);
 })
-const router = require('./Router/Router');
+const router = require('./Router/route');
 app.use('/v1',router);
 //db connection
 const connect = require('./Config/Database');

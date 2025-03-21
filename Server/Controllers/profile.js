@@ -1,31 +1,33 @@
 const express = require('express');
 const User = require('../Models/User');
-exports.Profile = async(req,res)=>{
+
+exports.profile = async(req,res) => {
     try {
         const id = req.params.id;
         if(!id){
-         res.status(400).json({
-             success:false,
-             message:"give the id please"
-         })
+            return res.status(400).json({
+                success: false,
+                message: "User ID is required"
+            });
         }
         const user = await User.findById(id);
-        user.password = undefined;
         if(!user){
-         res.status(400).json({
-             success:false,
-             message:"User not Found"
-         })
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
         }
-        res.status(200).json({
-         success:true,
-         data:user,
-         message:"Details found successfully"
-        })     
+        user.password = undefined;
+        return res.status(200).json({
+            success: true,
+            data: user,
+            message: "Details found successfully"
+        });     
     } catch (error) {
-        res.status(500).json({
-            success:false,
-            message:"Server error"
-        })
+        console.error("Error fetching profile:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error"
+        });
     }
 }

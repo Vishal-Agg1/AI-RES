@@ -9,24 +9,40 @@ export default function Profile() {
     const [error, setError] = useState(null);
 
     const id = useSelector((state) => state.auth.user);
+    const userRole = useSelector((state) => state.auth.role);
 
     useEffect(() => {
-        if (!id) return; // Prevent API call if ID is not available
+        if (!id) {
+            setLoading(false);
+            setError("User not logged in");
+            return;
+        }
 
+        console.log("Fetching profile for user ID:", id);
+        
         axios.get(`http://localhost:8000/v1/profile/${id}`, { withCredentials: true })
             .then((response) => {
+                console.log("Profile response:", response.data);
                 if (response.data.success) {
                     setData(response.data.data);
                 } else {
-                    setError("Failed to fetch profile");
+                    setError(response.data.message || "Failed to fetch profile");
                 }
             })
             .catch((error) => {
-                setError("Error fetching profile");
-                console.error(error);
+                console.error("Profile fetch error:", error.response?.data || error.message);
+                setError("Error fetching profile: " + (error.response?.data?.message || error.message));
             })
             .finally(() => setLoading(false));
     }, [id]);
+
+    if (!id) {
+        return (
+            <div className="profile-container">
+                <p className="error">Please log in to view your profile</p>
+            </div>
+        );
+    }
 
     return (
         <div className="profile-container">
@@ -36,13 +52,18 @@ export default function Profile() {
                 <p className="error">{error}</p>
             ) : (
                 <div className="profile-card">
-                    <img
-                        src={`https://api.dicebear.com/7.x/initials/svg?seed=${data.name}`}
-                        alt="Profile Avatar"
-                        className="avatar"
-                    />
-                    <h2>{data.name}</h2>
-                    <p className="email">{data.email}</p>
+                    {data && (
+                        <>
+                            <img
+                                src={`https://api.dicebear.com/7.x/initials/svg?seed=${data.name}`}
+                                alt="Profile Avatar"
+                                className="avatar"
+                            />
+                            <h2>{data.name}</h2>
+                            <p className="email">{data.email}</p>
+                            <p className="role">Role: {userRole || 'Not specified'}</p>
+                        </>
+                    )}
                 </div>
             )}
         </div>

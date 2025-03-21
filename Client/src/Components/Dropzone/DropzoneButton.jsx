@@ -5,39 +5,55 @@ import { Dropzone, MIME_TYPES } from '@mantine/dropzone';
 import classes from './DropzoneButton.module.css';
 import { useSelector } from 'react-redux';
 import axios from "axios"
-export function DropzoneButton() {
+
+export function DropzoneButton({ onUploadComplete }) {
   const theme = useMantineTheme();
   const openRef = useRef(null);
-  //loading control
   const [loading, setLoading] = useState(false); 
-  //status fo uplaod
   const [status,setstatus] = useState(false);
-  const id = useSelector((state)=>{
-    return state.auth.user;
-  })
-  const handleFileUpload = async (files) => {
-    setLoading(true); // Start loading
-    console.log("Uploading file...", files[0]);
-    const file = files[0];
-    const formdata = new FormData();
-    formdata.append("file",file);
-    formdata.append("id",id);
-    try {
-      const response = await axios.post("http://localhost:8000/v1/upload",formdata, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-      });
+  const id = useSelector((state)=> state.auth.user);
 
-      if(response.data.success==true) alert("File Uploaded successfully")
-      else{alert("Please Upload again")}
+  const handleFileUpload = async (files) => {
+    try {
+      setLoading(true);
+      const file = files[0];
+      console.log("Uploading file:", file.name);
+      console.log("User ID:", id);
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("id", id);
+
+      const response = await axios.post(
+        "http://localhost:5000/v1/upload",
+        formData,
+        {
+          withCredentials: true,
+          // Let axios set the correct Content-Type with boundary
+          headers: {
+            'Accept': 'application/json',
+          }
+        }
+      );
+
+      console.log("Upload response:", response.data);
+
+      if(response.data.success) {
+        alert("File Uploaded successfully");
+        if (onUploadComplete) {
+          onUploadComplete(file);
+        }
+      } else {
+        alert(response.data.message || "Upload failed. Please try again.");
+      }
     } catch (error) {
-      alert("error uploading file")
-      console.log(error);
-    }finally{setLoading(false);}
-  
+      console.error("Upload error:", error.response?.data || error.message);
+      alert("Error uploading file: " + (error.response?.data?.message || error.message));
+    } finally {
+      setLoading(false);
+    }
   };
+
   return (
     <div className={classes.wrapper}>
       <Dropzone 
@@ -47,6 +63,7 @@ export function DropzoneButton() {
         radius="md"
         maxSize={30 * 1024 ** 2}
         loading={loading}
+        accept={[MIME_TYPES.pdf]}
       >
         <div style={{ pointerEvents: 'none' }}>
           <Group justify="center">
@@ -73,10 +90,15 @@ export function DropzoneButton() {
         </div>
       </Dropzone>
 
-      <Button className={classes.control} size="md" radius="xl" onClick={() => openRef.current?.()}>
-        Select files
+      <Button 
+        className={classes.control} 
+        size="md" 
+        radius="xl" 
+        onClick={() => openRef.current?.()} 
+        disabled={loading}
+      >
+        {loading ? 'Uploading...' : 'Select files'}
       </Button>
-            
     </div>
   );
 }

@@ -15,6 +15,12 @@ const User = new mongoose.Schema({
         required:true,
         trim:true
     },
+    role:{
+        type:String,
+        enum: ['Job Seeker', 'Employer'],
+        default: 'Job Seeker',
+        required:true
+    },
     files:[
         {
             type:mongoose.Schema.Types.ObjectId,

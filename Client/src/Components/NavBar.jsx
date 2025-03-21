@@ -50,17 +50,36 @@ export default function NavbarMinimal() {
     console.log("Auth state:", state.auth.isAuth);
     return state.auth.isAuth; 
   });
-
-  const links = mockdata.map((link, index) => (
-    <NavbarLink
-      key={link.label}
-      icon={link.icon}
-      label={link.label}
-      active={index === active}
-      onClick={() => setActive(index)}
-      path={link.path}
-    />
-  ));
+  const role = useSelector((state) => {
+    return state.auth.role;
+  });
+  const links = mockdata.map((link, index) => {
+    if (index === 3) {
+      if (role === "Employer") {
+        return (
+          <NavbarLink
+            key={link.label}
+            icon={link.icon}
+            label={link.label}
+            active={index === active}
+            onClick={() => setActive(index)}
+            path={link.path}
+          />
+        );
+      }
+      return null;
+    }
+    return (
+      <NavbarLink
+        key={link.label}
+        icon={link.icon}
+        label={link.label}
+        active={index === active}
+        onClick={() => setActive(index)}
+        path={link.path}
+      />
+    );
+  });
   const dispatch = useDispatch();
   const handlelogout = ()=>{
      dispatch(logout());

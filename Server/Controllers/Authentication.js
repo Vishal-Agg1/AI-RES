@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config();
 exports.signup=async(req,res)=>{
     try {
-        const {name,email,password} = req.body;
+        const {name,email,password,role} = req.body;
 
         const exuser = await User.findOne({email});
         if(exuser){
@@ -19,7 +19,8 @@ exports.signup=async(req,res)=>{
             const person = await User.create({
                 name:name,
                 email:email,
-                password:pass
+                password:pass,
+                role:role || 'Job Seeker' // Use provided role or default to Job Seeker
             });
             return res.status(200).json({
                 success:true,
@@ -43,7 +44,7 @@ exports.signup=async(req,res)=>{
 
 exports.login=async(req,res)=>{
     try {
-        const {email,password} = req.body;
+        const {email,password,role} = req.body;
         if(!email||!password){
             return res.status(400).json({
                 success:false,
@@ -57,11 +58,20 @@ exports.login=async(req,res)=>{
                 message:"No User Found"
             })
         }
+        
+        // Verify that the role matches
+        if(role && person.role !== role) {
+            return res.status(403).json({
+                success:false,
+                message:"Invalid role for this account"
+            });
+        }
+        
         const pass = await bcrypt.compare(password,person.password);
         if(pass){
             try {
                 const token = jwt.sign(
-                    { email: person.email, id: person._id.toString() },
+                    { email: person.email, id: person._id.toString(), role: person.role },
                     process.env.JWT_SECRET,
                     { expiresIn: "2h" }
                 );

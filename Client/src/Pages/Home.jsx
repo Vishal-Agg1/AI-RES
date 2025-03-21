@@ -23,7 +23,7 @@ export default function Home() {
             marginBottom: "10px",
           }}
         >
-          Welcome to <span style={{ color: "#007bff" }}>Share It</span>
+          Welcome to <span style={{ color: "#007bff" }}>AI-RES</span>
         </h1>
   
         {/* Subtitle */}

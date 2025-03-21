@@ -2,7 +2,8 @@ const User = require('../Models/User');
 const Files = require('../Models/Files');
 const cloudinary = require('cloudinary');
 const mongoose = require('mongoose');
-exports.fileupload = async (req,res)=>{
+
+exports.fileupload = async (req, res) => {
     try {
         const data = req.files.file;
         const email = req.body.id;

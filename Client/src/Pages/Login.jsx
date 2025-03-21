@@ -12,19 +12,24 @@ const dispatch = useDispatch();
   const [data, setData] = useState({
     email: "",
     password: "",
+    role: "Job Seeker" // Default role
   });
 const handleChange=(e)=>{
     setData({...data,[e.target.name]:e.target.value});
 }
 const handleSubmit=(e)=>{
     e.preventDefault();
-    axios.post("http://localhost:8000/v1/login",{
+    axios.post("http://localhost:5000/v1/login",{
         email:data.email,
         password:data.password,
+        role: data.role // Include role in the request
     })
     .then(response=>{
         if(response.data.success==true){
-            dispatch(login({user:response.data.data._id}));
+            dispatch(login({
+                user: response.data.data._id,
+                role: response.data.data.role
+            }));
             Navigate('/');
         }
         else{
@@ -51,6 +56,20 @@ const handleSubmit=(e)=>{
               className="form-input"
             />
           </div>
+          
+          <div className="form-group">
+            <label className="form-label">Role</label>
+            <select
+              name="role"
+              value={data.role}
+              onChange={handleChange}
+              className="form-input"
+            >
+              <option value="Job Seeker">Job Seeker</option>
+              <option value="Employer">Employer</option>
+            </select>
+          </div>
+          
           <div className="form-group">
             <PasswordStrength
               name="password"
